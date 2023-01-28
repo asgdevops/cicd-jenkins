@@ -31,3 +31,4 @@ Each node has a different operating system:
 6. Add the Alpine, CentOS, Debian and Ubuntu nodes accordingly.
 7. Run the [ansible_hello.pipeline]() to the a simple test.
 
+# Steps
