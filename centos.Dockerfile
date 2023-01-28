@@ -37,14 +37,15 @@ RUN mkdir /var/run/sshd
 ADD ./sshd_config /etc/ssh/sshd_config
 RUN ssh-keygen -A -v
 
-# install packages: git, java, and maven
+# install packages: git, and open JDK 11
 RUN yum install -y git.x86_64 && \
-    yum install -y java-11-openjdk-devel 
+    yum -y install java-11-openjdk java-11-openjdk-devel
 
-# Update the java version to jdk11
-RUN mv /etc/alternatives/java /etc/alternatives/java.old && \
-    ln -s /usr/lib/jvm/java-11-openjdk-11.0.17.0.8-2.el7_9.x86_64/bin/java /etc/alternatives/java
+# setup java 11
+RUN JAVA=`alternatives --list | awk '{ print $3 }' | grep -E '/bin/java$'` && \
+    alternatives --set java $JAVA
 
+# Setd default username
 USER $username
 WORKDIR /home/$username
 
