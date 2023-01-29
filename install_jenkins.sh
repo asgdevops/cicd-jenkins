@@ -219,7 +219,7 @@ version=23.01.26;
 # Process Stepss
 #
 set_env;         # Set the environment variables
-#set_docker;
+set_docker;
 set_directories; # Create the directory tree
-#set_ssh;         # Create the SSH RSA key
-#set_container;   # Set up the containerss
+set_ssh;         # Create the SSH RSA key
+set_container;   # Set up the containerss
