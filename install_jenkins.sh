@@ -14,9 +14,6 @@ set_env() {
   # agent port
   agent_port=50000;
 
-  # docker in docker port
-  docker_port=2376;
-
   # Application working directory
   work_dir=/app/data;
 
@@ -29,20 +26,8 @@ set_env() {
   # Jenkins data directory
   data_dir=`echo ${base}/jenkins_home`;
 
-  # Jenkins docker certificates ca directory
-  certs_ca_dir=`echo ${base}/certs/ca`;
-
-  # Jenkins docker certificates client directory
-  certs_client_dir=`echo ${base}/certs/client`;
-
   # volume alias data
   volume_data=`echo ${container}_data`;
-
-  # volume alias cert-ca
-  volume_certs_ca=`echo ${container}_certs_ca`;
-
-  # volume alias cert-client
-  volume_certs_client=`echo ${container}_certs_client`;
 
   # image name
   image='jenkins-blueocean:2.387-jdk11';
@@ -52,11 +37,6 @@ set_env() {
 
   # container jenkins home
   JENKINS_HOME=/var/jenkins_home;
-
-  # Docker In Docker variables
-  DOCKER_HOST="tcp://docker:${docker_port}" ;
-  DOCKER_CERT_PATH=`echo ${certs_client_dir}`;
-  DOCKER_TLS_VERIFY=1 ;
 
   # default username
   username=jenkins;
@@ -69,20 +49,12 @@ set_env() {
   echo "image=${image}" >> .env;
   echo "container=${container}" >> .env ;
   echo "agent_port=${agent_port}" >> .env;
-  echo "docker_port=${docker_port}" >> .env;
   echo "http_port=${http_port}" >> .env;
   echo "network=${network}" >> .env;
   echo "data_dir=${data_dir}" >> .env;
-  echo "certs_ca_dir=${certs_ca_dir}" >> .env;
-  echo "certs_client_dir=${certs_client_dir}" >> .env;
   echo "volume_data=${volume_data}" >> .env;
-  echo "volume_certs_ca=${volume_certs_ca}" >> .env;
-  echo "volume_certs_client=${volume_certs_client}" >> .env;
   echo "JAVA_HOME=${JAVA_HOME}" >> .env;
   echo "JENKINS_HOME=${JENKINS_HOME}" >> .env;
-  echo "DOCKER_HOST=${DOCKER_HOST}" >> .env;
-  echo "DOCKER_CERT_PATH=${DOCKER_CERT_PATH}" >> .env;
-  echo "DOCKER_TLS_VERIFY=${JENKINS_HOME}" >> .env;
   echo "username=${username}" >> .env;
   echo "ssh_key=${ssh_key}" >> .env;
 
@@ -150,15 +122,6 @@ set_directories() {
   sudo chown -R $USER:docker ${base};
   sudo chmod -R g+rwx ${base};
   sudo chown $USER:docker .env;
-
-  # create docker directory structure
-  [ ! -d ${certs_ca_dir} ] && sudo mkdir -p ${certs_ca_dir};
-  [ ! -d ${certs_client_dir} ] && sudo mkdir -p ${certs_client_dir};
-
-  sudo chown -R $USER:docker ${certs_ca_dir};
-  sudo chown -R $USER:docker ${certs_client_dir};
-  sudo chmod -R g+rwx ${certs_ca_dir};
-  sudo chmod -R g+rwx ${certs_client_dir};
 
   echo "Directory structure completed successfully.";
   tree ${base};
