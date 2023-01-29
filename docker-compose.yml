@@ -22,24 +22,6 @@ services:
       - data:${JENKINS_HOME}
     working_dir: "${JENKINS_HOME}"
 
-  docker-dind:
-    container_name: "dind-agent"
-    image: "dind/ssh:3.17"
-    environment:
-      - DOCKER_TLS_CERTDIR=/certs
-    networks: 
-      net:
-        aliases: 
-          - docker
-    ports:
-      - "2376:2376/tcp"
-    privileged: true
-    user: root
-    volumes:
-      - cert-ca:/certs/ca
-      - cert-client:/certs/client
-      - data:${JENKINS_HOME}
-
   alpine:
     build:
       args:
