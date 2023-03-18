@@ -1,5 +1,5 @@
-# cd-project-jenkins
-CD Projects Jenkins provisioning
+# CI/CD jenkins
+Continuous Integration/Continuous Delivery Project with Jenkins
 
 ## Goal 
 - Provision Jenkins in a Virtual Machine running on ubuntu Server 22.04 "jammy".
@@ -31,4 +31,3 @@ Each node has a different operating system:
 6. Add the Alpine, CentOS, Debian and Ubuntu nodes accordingly.
 7. Run the [ansible_hello.pipeline]() to the a simple test.
 
-# Steps
