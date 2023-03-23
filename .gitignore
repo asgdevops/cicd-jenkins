@@ -1,1 +1,4 @@
-*key*
+.env
+jenkins_key*
+sshd_config
+backup/

@@ -1,4 +1,4 @@
-version: "3.9"
+version: '3'
 
 services:
 
@@ -6,7 +6,7 @@ services:
     build:
       context: .
       dockerfile: "jenkins.Dockerfile"
-    container_name: "${container}"
+    container_name: "${project}"
     env_file: .env
     image: "${image}"
     networks: 
@@ -18,7 +18,7 @@ services:
     restart: on-failure
     user: root
     volumes:
-      - cert-client:/certs/client:ro
+      - certs:${JENKINS_HOME}/certs/client:ro
       - data:${JENKINS_HOME}
     working_dir: "${JENKINS_HOME}"
 
@@ -27,26 +27,29 @@ services:
       args:
         - key=${ssh_key}
         - username=${username}
+        - port=${ssh_port}
       context: .
       dockerfile: "alpine.Dockerfile"
-    container_name: "alpine-controller"
-    image: "alpine/ssh:3.17"
+    container_name: "${project}-alpine-controller"
+    image: "alpine/jenkins:3.17"
     networks: 
       - net
     volumes:
       - data:${JENKINS_HOME}
-
+    restart: on-failure
   centos:
     build:
       args:
         - key=${ssh_key}
         - username=${username}
+        - port=${ssh_port}
       context: .
       dockerfile: "centos.Dockerfile"
-    container_name: "centos-agent"
-    image: "centos/ssh:7"
+    container_name: "${project}-centos-agent"
+    image: "centos/jenkins:7"
     networks: 
       - net
+    restart: on-failure
     volumes:
       - data:${JENKINS_HOME}
   debian:
@@ -54,26 +57,29 @@ services:
       args:
         - key=${ssh_key}
         - username=${username}
+        - port=${ssh_port}
       context: .
       dockerfile: "debian.Dockerfile"
-    container_name: "debian-agent"
-    image: "debian/ssh:11"
+    container_name: "${project}-debian-agent"
+    image: "debian/jenkins:11"
     networks: 
       - net
+    restart: on-failure
     volumes:
       - data:${JENKINS_HOME}
-
   ubuntu:
     build:
       args:
         - key=${ssh_key}
         - username=${username}
+        - port=${ssh_port}
       context: .
       dockerfile: "ubuntu.Dockerfile"
-    container_name: "ubuntu-agent"
-    image: "ubuntu/ssh:22.04"
+    container_name: "${project}-ubuntu-agent"
+    image: "ubuntu/jenkins:22.04"
     networks: 
       - net
+    restart: on-failure
     volumes:
       - data:${JENKINS_HOME}
 
@@ -82,21 +88,13 @@ networks:
       driver: bridge
 
 volumes:
-  cert-ca:
+  certs:
     driver: local
     driver_opts:
       type: 'none'
       o: 'bind'
-      device: "${certs_ca_dir}"
-    name: ${volume_certs_ca}
-
-  cert-client:
-    driver: local
-    driver_opts:
-      type: 'none'
-      o: 'bind'
-      device: "${certs_client_dir}"
-    name: ${volume_certs_client}
+      device: "${certs_dir}"
+    name: ${volume_certs}
 
   data:
     driver: local
